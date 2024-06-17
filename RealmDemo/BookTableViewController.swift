@@ -20,6 +20,7 @@ class BookTableViewController: UITableViewController {
         books = BookItem.getAll()
     }
 
+    // Add book
     @IBAction func onAddButtonClicked(_ sender: Any) {
         showInputBookAlert("Add book name") { name in
             BookItem.add(name: name)
@@ -56,12 +57,13 @@ class BookTableViewController: UITableViewController {
         return books?.count ?? 0
     }
     
+    // View detail - set book for cell
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "BookTableViewCell", for: indexPath) as? BookTableViewCell,
             let book = books?[indexPath.row] else {
                 return BookTableViewCell(frame: .zero)
         }
-        // 2
+        // 2: update book
         cell.configureWith(book) { [weak self] book in
             book.toggleCompleted()
         //    self?.tableView.reloadData()
@@ -70,6 +72,7 @@ class BookTableViewController: UITableViewController {
         return cell
     }
     
+    // When user tap on cell, toggleCompleted will be called
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let cell = tableView.cellForRow(at: indexPath) as? BookTableViewCell else {
             return
@@ -78,6 +81,7 @@ class BookTableViewController: UITableViewController {
         cell.toggleCompleted()
     }
     
+    // Delete book
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard let book = books?[indexPath.row],
             editingStyle == .delete else { return }
@@ -85,6 +89,7 @@ class BookTableViewController: UITableViewController {
        // tableView.reloadData()
     }
     
+    // closure in observe func will be called if database changed
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
